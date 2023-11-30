@@ -1,0 +1,8 @@
+library(tidyverse)
+library(ChIPseeker)
+library(GenomicFeatures)
+peak<-readPeakFile("peak.bed",head=F)
+peak_ano<-annotatePeak(peak,tssRegion=c(-3000,0),TxDb=txdb.cs,level="gene",assignGenomicAnnotation=T,genomicAnnotationPriority=c("Promoter","Exon","Intron","5UTR","3UTR","Downstream","Intergenic"),addFlankGeneInfo=T,flankDistance=2500,overlap="all")
+peak_ano_gene <- peak_ano %>% as.data.frame() %>% dplyr::select(seqnames,start,end,geneId)
+plotAnnoBar(peak_ano)
+write.table(peak_ano_gene,"peak_ano_gene.txt",sep="\t",quote=F,row.names=F)
